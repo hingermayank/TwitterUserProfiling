@@ -1,5 +1,6 @@
 package com.userprofiling.twitterside;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,12 +12,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.sun.script.javascript.JSAdapter;
 import com.temboo.Library.Twitter.Timelines.UserTimeline;
 import com.temboo.Library.Twitter.Timelines.UserTimeline.UserTimelineInputSet;
 import com.temboo.Library.Twitter.Timelines.UserTimeline.UserTimelineResultSet;
 import com.temboo.core.TembooException;
 import com.temboo.core.TembooSession;
+import com.userprofiling.database.MySQLAccess;
 
 public class getTweets {
 
@@ -48,10 +49,11 @@ public class getTweets {
 	public static String TWEET_POSSIBILY_SENSITIVE;
 	public static List<Object> USER_ENTITY_DESCRIPTION_URLS;
 	public static List<Url> TWEET_ENTITIES_URLS;
-	public static List<Object> TWEET_ENTITIES_HASHTAGS;
+	public static List<Hashtags> TWEET_ENTITIES_HASHTAGS;
 	public static List<User_mention> TWEET_ENTITIES_USER_MENTIONS;
+	MySQLAccess mysql = new MySQLAccess();
 	
-	public void getTweetsnRetweets() throws TembooException, JSONException
+	public void getTweetsnRetweets() throws TembooException, JSONException, SQLException
 	{
 		// Instantiate the Choreo, using a previously instantiated TembooSession object, eg:
 		TembooSession session = new TembooSession("hingermayank", "UserProfiling", "68247141dcb04a79b7076a2554719d47");
@@ -65,7 +67,7 @@ public class getTweets {
 
 		// Set inputs
 		userTimelineInputs.set_ExcludeReplies("false");
-		userTimelineInputs.set_Count("2");
+		userTimelineInputs.set_Count("1");
 		userTimelineInputs.set_ContributorDetails("true");
 		userTimelineInputs.set_IncludeRetweets("true");
 
@@ -76,7 +78,7 @@ public class getTweets {
 		
 	}
 	
-	public void parseJSON(String response) throws JSONException
+	public void parseJSON(String response) throws JSONException, SQLException
 	{		
 		Gson gson = new Gson();
 	    JsonParser parser = new JsonParser();
@@ -135,10 +137,10 @@ public class getTweets {
 			map.put("USER_FAVOURITES_COUNT", USER_FAVOURITES_COUNT+"");
 			USER_FRIENDS_COUNT = user.getFriends_count();
 			map.put("USER_FRIENDS_COUNT", USER_FRIENDS_COUNT+"");
-			USER_CREATED_AT = user.getCreated_at();
-			map.put("USER_CREATED_AT", USER_CREATED_AT);
+		//	USER_CREATED_AT = user.getCreated_at();
+		//	map.put("USER_CREATED_AT", USER_CREATED_AT);
 			USER_IS_VERIFIED = user.isVerified();
-			
+			map.put("USER_IS_VERIFIED", USER_IS_VERIFIED+"");
 			USER_STATUSES_COUNT = user.getStatuses_count();
 			map.put("USER_STATUSES_COUNT", USER_STATUSES_COUNT+"");
 			
@@ -146,10 +148,9 @@ public class getTweets {
 			TWEET_ENTITIES_HASHTAGS = entity.getHashtags();
 			TWEET_ENTITIES_USER_MENTIONS = entity.getUser_mentions();
 			TWEET_ENTITIES_URLS = entity.getUrls();
-
 			info_list.add(map);
+			mysql.addToUsername(USER_SCREEN_NAME);
 	    }
-	    System.out.println(info_list.get(1).toString());
 	}
 	
 }

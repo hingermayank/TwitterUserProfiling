@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
 public class Entities_ {
 
     @Expose
-    private List<Object> hashtags = new ArrayList<Object>();
+    private List<Hashtags> hashtags = new ArrayList<Hashtags>();
     @Expose
     private List<Object> symbols = new ArrayList<Object>();
     @Expose
@@ -17,11 +17,11 @@ public class Entities_ {
     @Expose
     private List<User_mention> user_mentions = new ArrayList<User_mention>();
 
-    public List<Object> getHashtags() {
+    public List<Hashtags> getHashtags() {
         return hashtags;
     }
 
-    public void setHashtags(List<Object> hashtags) {
+    public void setHashtags(List<Hashtags> hashtags) {
         this.hashtags = hashtags;
     }
 
